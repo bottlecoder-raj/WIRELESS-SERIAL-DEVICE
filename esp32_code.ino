@@ -2,7 +2,7 @@
 #include <WiFi.h>
 
 // REPLACE WITH THE MAC ADDRESS OF THE OTHER ESP32
-uint8_t broadcastAddress[] = {0xD4, 0x8A, 0xFC, 0xD0, 0xC8, 0xF8};  //Check for MAC Address usimg the MAC_Address_Tester.ino
+uint8_t broadcastAddress[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};  //Check for MAC Address usimg the MAC_Address_Tester.ino
 
 
 // FIXED: Updated signature for Send Callback (v3.0+)
