@@ -18,6 +18,7 @@ Large File Handling: Automatically fragments data into 240-byte packets.
 
 📂 Project Structure
 Based on the current workspace:
+<p>
 .
 ├── esp32_code.ino          # Main Symmetric Bridge Firmware
 ├── MAC_Address_tester.ino  # Utility to find ESP32 MAC addresses
@@ -26,7 +27,7 @@ Based on the current workspace:
 ├── hello.txt               # Sample text file for testing
 ├── README.md               # Project Documentation
 └── LICENSE                 # Project License
-
+</p>
 ⚙️ Essential Raspberry Pi Setup
 To use the GPIO Serial Pins (8 & 10) on the Raspberry Pi:
 
