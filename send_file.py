@@ -1,39 +1,46 @@
 import serial
+import serial.tools.list_ports
 import time
 import os
 
 # CONFIGURATION
-PORT = 'COM3'  # Change this to your PC's ESP32 port
 BAUD = 115200
-FILE_TO_SEND = "transfer_test.txt"
+FILE_TO_SEND = "hello.txt"
 CHUNK_SIZE = 240 
 
+def find_esp32_port():
+    ports = serial.tools.list_ports.comports()
+    for port in ports:
+        # Looks for common ESP32 chip identifiers
+        if "CP210" in port.description or "CH340" in port.description or "USB" in port.description:
+            print(f"--- Found ESP32 on {port.device} ({port.description}) ---")
+            return port.device
+    return None
+
 def send_file():
+    port = find_esp32_port()
+    if not port:
+        print("Error: No ESP32 detected. Check your USB connection.")
+        return
+
     if not os.path.exists(FILE_TO_SEND):
         print(f"Error: {FILE_TO_SEND} not found!")
         return
 
-    ser = serial.Serial(PORT, BAUD, timeout=1)
-    time.sleep(2) # Wait for ESP32 to reboot after connection
+    ser = serial.Serial(port, BAUD, timeout=1)
+    time.sleep(2) 
 
     print(f"Starting transfer of {FILE_TO_SEND}...")
-    start_time = time.time()
-
     with open(FILE_TO_SEND, "rb") as f:
         while True:
             chunk = f.read(CHUNK_SIZE)
             if not chunk:
                 break
             ser.write(chunk)
-            # Short delay to let ESP-NOW process the packet
             time.sleep(0.05) 
-            print(f"Sent {len(chunk)} bytes...", end="\r")
-
-    # Send a unique EOF string so the Raspberry Pi knows to close the file
-    ser.write(b"##EOF##")
     
-    end_time = time.time()
-    print(f"\nTransfer Complete in {round(end_time - start_time, 2)} seconds.")
+    ser.write(b"##EOF##")
+    print("\nTransfer Complete.")
     ser.close()
 
 if __name__ == "__main__":
