@@ -21,7 +21,7 @@ Based on the current workspace:
 ```
 ├── esp32_code.ino         # Main Symmetric Bridge Firmware
 ├── MAC_Address_tester.ino  # Utility to find ESP32 MAC addresses
-├── send_file.py            # PC-side Sender Script (with Progress Bar)
+├── send_file.py            # PC-side Sender Script 
 ├── receive_file.py         # RPi-side Receiver Script
 ├── hello.txt               # Sample text file for testing
 ├── README.md               # Project Documentation
