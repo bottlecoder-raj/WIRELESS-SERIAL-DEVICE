@@ -41,6 +41,7 @@ To use the GPIO Serial Pins (8 & 10) on the Raspberry Pi:
 - Find MACs: **Upload MAC_Address_tester.ino** to both boards and note the addresses.
 
 - Flash Bridge: Update broadcastAddress in **esp32_code.ino** with the partner's MAC and upload.
+- Install tqdm library if not installed '''pip install tqdm'''        
 
 - Listen: On the Pi, run python3 receive_file.py.
         On the Pc, run python receive_file.py.
