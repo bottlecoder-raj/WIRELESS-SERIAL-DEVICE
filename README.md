@@ -21,7 +21,7 @@ Based on the current workspace:
 ```
 ├── esp32_code.ino         # Main Symmetric Bridge Firmware
 ├── MAC_Address_tester.ino  # Utility to find ESP32 MAC addresses
-├── send_file.py            # PC-side Sender Script 
+├── send_file.py            # PC-side Sender Script (with Progress Bar)
 ├── receive_file.py         # RPi-side Receiver Script
 ├── hello.txt               # Sample text file for testing
 ├── README.md               # Project Documentation
@@ -41,6 +41,7 @@ To use the GPIO Serial Pins (8 & 10) on the Raspberry Pi:
 - Find MACs: **Upload MAC_Address_tester.ino** to both boards and note the addresses.
 
 - Flash Bridge: Update broadcastAddress in **esp32_code.ino** with the partner's MAC and upload.
+- Install tqdm library if not installed ```pip install tqdm```        
 
 - Listen: On the Pi, run python3 receive_file.py.
         On the Pc, run python receive_file.py.
