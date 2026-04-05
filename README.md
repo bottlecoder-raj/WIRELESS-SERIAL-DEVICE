@@ -1,3 +1,4 @@
+![Project Banner](banner.png)
 ## 🚀 ESP-NOW Wireless Serial Bridge (USB)
 #### Version:1.0.0 (Baseline)
 
