@@ -44,4 +44,3 @@ void loop() {
     esp_now_send(broadcastAddress, buffer, readLen);
   }
 }
-//Fixed
