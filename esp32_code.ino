@@ -1,54 +1,54 @@
 #include <esp_now.h>
 #include <WiFi.h>
 
-// REPLACE WITH THE MAC ADDRESS OF THE OTHER ESP32
-uint8_t broadcastAddress[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};  //Check for MAC Address usimg the MAC_Address_Tester.ino
+// REPLACE WITH THE MAC ADDRESS OF THE RECEIVER
+uint8_t broadcastAddress[] = {0xD4, 0x8A, 0xFC, 0xCF, 0x19, 0x9C}; 
 
-
-// FIXED: Updated signature for Send Callback (v3.0+)
-// Changed const uint8_t *mac_addr to const wifi_tx_info_t *info
 void OnDataSent(const wifi_tx_info_t *info, esp_now_send_status_t status) {
-  // status == ESP_NOW_SEND_SUCCESS ? "Success" : "Fail"
+  // Optional: Serial.println(status == ESP_NOW_SEND_SUCCESS ? "OK" : "Error");
 }
 
-// FIXED: Updated signature for Receive Callback (v3.0+)
 void OnDataRecv(const esp_now_recv_info *recv_info, const uint8_t *incomingData, int len) {
-  // Forward everything received over air to the Serial port
+  // Push incoming radio data to Serial instantly
   Serial.write(incomingData, len);
 }
 
 void setup() {
+  // High baud rate recommended for continuous data
   Serial.begin(115200);
   WiFi.mode(WIFI_STA);
 
   if (esp_now_init() != ESP_OK) {
-    Serial.println("Error initializing ESP-NOW");
     return;
   }
 
-  // Registering callbacks
   esp_now_register_send_cb(OnDataSent);
   esp_now_register_recv_cb(OnDataRecv);
   
-  // Register peer
   esp_now_peer_info_t peerInfo = {};
   memcpy(peerInfo.peer_addr, broadcastAddress, 6);
   peerInfo.channel = 0;  
   peerInfo.encrypt = false;
   
   if (esp_now_add_peer(&peerInfo) != ESP_OK){
-    Serial.println("Failed to add peer");
     return;
   }
 }
 
 void loop() {
-  // Read from Serial (PC/RPi) and send via ESP-NOW
-  if (Serial.available()) {
-    uint8_t buffer[250]; 
-    int len = Serial.readBytes(buffer, sizeof(buffer));
-    if (len > 0) {
-      esp_now_send(broadcastAddress, buffer, len);
-    }
+  // CHECK: Is there data in the Serial buffer?
+  int availableBytes = Serial.available();
+  
+  if (availableBytes > 0) {
+    // Limit to the ESP-NOW max payload (250 bytes)
+    int len = (availableBytes > 250) ? 250 : availableBytes;
+    
+    uint8_t buffer[len];
+    
+    // READ: Grab only what is currently there (Non-blocking)
+    Serial.readBytes(buffer, len);
+    
+    // SEND: Push to radio immediately
+    esp_now_send(broadcastAddress, buffer, len);
   }
 }
